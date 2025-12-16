@@ -18,6 +18,15 @@ export class Producto {
   @Column({ default: 0 })
   stock: number;
 
+  @Column({ length: 120, nullable: true })
+  origen: string;
+
+  @Column({ type: 'text', nullable: true })
+  practicas_sostenibles: string;
+
+  @Column({ type: 'text', nullable: true })
+  recetas_sugeridas: string;
+
   @Column({ length: 50, nullable: false })
   categoria: string;
 

@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { JwtService } from '@nestjs/jwt';
 
@@ -17,7 +17,8 @@ export class AuthMiddleware implements NestMiddleware {
       const decoded = this.jwtService.verify(token);
       (req as any).usuario = decoded;
     } catch (error) {
-      throw new UnauthorizedException('Token inválido');
+      // Token inválido/expirado: no bloquear rutas públicas
+      // Continuar sin usuario; los endpoints protegidos validan presencia de usuario
     }
 
     next();

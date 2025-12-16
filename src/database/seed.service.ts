@@ -22,11 +22,11 @@ export class SeedService {
 
     console.log('Iniciando seed de datos...');
 
-    // Crear usuario de ejemplo con email 'usuario@tienda.com' y password 'usuario123'
+    // Crear usuario de ejemplo con email 'usuario@gmail.com' y password 'usuario123'
     const usuarioPassword = await bcrypt.hash('usuario123', 10);
     const usuario = this.usuariosRepository.create({
       nombre: 'Usuario Ejemplo',
-      email: 'usuario@tienda.com',
+      email: 'usuario@gmail.com',
       password: usuarioPassword,
       activo: true,
       telefono: '1234567890',
@@ -34,7 +34,7 @@ export class SeedService {
     });
 
     await this.usuariosRepository.save(usuario);
-    console.log('✓ Usuario creado: usuario@tienda.com / usuario123');
+    console.log('✓ Usuario creado: usuario@gmail.com / usuario123');
 
     console.log('Seed completado exitosamente.');
   }

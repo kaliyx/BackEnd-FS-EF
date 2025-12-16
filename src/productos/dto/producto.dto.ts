@@ -17,14 +17,26 @@ export class CreateProductoDto {
   @Min(0, { message: 'El stock no puede ser negativo' })
   stock: number;
 
-  @IsEnum(['hombres', 'mujeres', 'niños', 'accesorios'], {
-    message: 'La categoría debe ser: hombres, mujeres, niños o accesorios',
+  @IsEnum(['Frutas Frescas', 'Verduras Orgánicas', 'Productos Orgánicos', 'Productos Lácteos'], {
+    message: 'La categoría debe ser: Frutas Frescas, Verduras Orgánicas, Productos Orgánicos o Productos Lácteos',
   })
   categoria: string;
 
   @IsOptional()
   @IsString()
   imagen?: string;
+
+  @IsOptional()
+  @IsString()
+  origen?: string;
+
+  @IsOptional()
+  @IsString()
+  practicas_sostenibles?: string;
+
+  @IsOptional()
+  @IsString()
+  recetas_sugeridas?: string;
 }
 
 export class UpdateProductoDto {
@@ -49,12 +61,24 @@ export class UpdateProductoDto {
   stock?: number;
 
   @IsOptional()
-  @IsEnum(['hombres', 'mujeres', 'niños', 'accesorios'])
+  @IsEnum(['Frutas Frescas', 'Verduras Orgánicas', 'Productos Orgánicos', 'Productos Lácteos'])
   categoria?: string;
 
   @IsOptional()
   @IsString()
   imagen?: string;
+
+  @IsOptional()
+  @IsString()
+  origen?: string;
+
+  @IsOptional()
+  @IsString()
+  practicas_sostenibles?: string;
+
+  @IsOptional()
+  @IsString()
+  recetas_sugeridas?: string;
 
   @IsOptional()
   @IsEnum(['activo', 'inactivo'])

@@ -15,12 +15,27 @@ async function bootstrap() {
     }),
   );
   
-  app.enableCors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  });
+  // CORS flexible en desarrollo: permite cualquier origen (útil para IPs de red como 192.168.x.x)
+  const isProd = process.env.NODE_ENV === 'production';
+  const corsOptions = isProd
+    ? {
+        origin:
+          process.env.FRONTEND_ORIGINS?.split(',').map((o) => o.trim()) ?? [
+            'http://localhost:5173',
+            'http://127.0.0.1:5173',
+          ],
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+      }
+    : {
+        origin: (_origin: any, callback: any) => callback(null, true),
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+      };
+
+  app.enableCors(corsOptions as any);
   
   const seedService = app.get(SeedService);
   const productoSeedService = app.get(ProductoSeedService);
