@@ -55,7 +55,7 @@ describe('SeedService', () => {
       (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
 
       const mockAdmin = {
-        nombre: 'Administrador',
+        nombre: 'admin',
         email: 'admin@tienda.com',
         password: hashedPassword,
         rol: 'admin',
@@ -64,15 +64,27 @@ describe('SeedService', () => {
         direccion: 'Calle Principal 123',
       };
 
-      mockUsuariosRepository.create.mockReturnValue(mockAdmin);
-      mockUsuariosRepository.save.mockResolvedValue(mockAdmin);
+      mockUsuariosRepository.create.mockReturnValueOnce(mockAdmin);
+      mockUsuariosRepository.save.mockResolvedValueOnce(mockAdmin);
+
+      // mock para vendedor
+      mockUsuariosRepository.create.mockReturnValueOnce({
+        nombre: 'vendedor',
+        email: 'vendedor@tienda.com',
+        password: hashedPassword,
+        rol: 'vendedor',
+        activo: true,
+      });
+      mockUsuariosRepository.save.mockResolvedValueOnce({
+        nombre: 'vendedor',
+      });
 
       await service.seed();
 
-      expect(bcrypt.hash).toHaveBeenCalledWith('admin123', 10);
+      expect(bcrypt.hash).toHaveBeenCalledWith('admin', 10);
       expect(mockUsuariosRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          nombre: 'Administrador',
+          nombre: 'admin',
           email: 'admin@tienda.com',
           rol: 'admin',
           activo: true,
@@ -80,7 +92,7 @@ describe('SeedService', () => {
       );
     });
 
-    it('debería crear 3 vendedores', async () => {
+    it('debería crear 2 usuarios (admin y vendedor)', async () => {
       mockUsuariosRepository.count.mockResolvedValue(0);
       (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
 
@@ -98,12 +110,12 @@ describe('SeedService', () => {
 
       await service.seed();
 
-      // 1 admin + 3 vendedores = 4 calls a create
-      expect(mockUsuariosRepository.create).toHaveBeenCalledTimes(4);
-      expect(mockUsuariosRepository.save).toHaveBeenCalledTimes(4);
+      // 1 admin + 1 vendedor = 2 calls a create
+      expect(mockUsuariosRepository.create).toHaveBeenCalledTimes(2);
+      expect(mockUsuariosRepository.save).toHaveBeenCalledTimes(2);
     });
 
-    it('debería crear vendedores con rol correcto', async () => {
+    it('debería crear usuarios con rol correcto', async () => {
       mockUsuariosRepository.count.mockResolvedValue(0);
       (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
 
@@ -120,13 +132,9 @@ describe('SeedService', () => {
 
       await service.seed();
 
-      const vendedorCalls = mockUsuariosRepository.create.mock.calls.slice(1);
-      for (const call of vendedorCalls) {
-        expect(call[0]).toMatchObject({
-          rol: 'vendedor',
-          activo: true,
-        });
-      }
+      const calls = mockUsuariosRepository.create.mock.calls;
+      expect(calls[0][0]).toMatchObject({ rol: 'admin', activo: true });
+      expect(calls[1][0]).toMatchObject({ rol: 'vendedor', activo: true });
     });
 
     it('debería asignar contraseñas hasheadas a todos los usuarios', async () => {
@@ -141,10 +149,10 @@ describe('SeedService', () => {
 
       await service.seed();
 
-      // 1 admin + 3 vendedores = 4 bcrypt.hash calls
-      expect(bcrypt.hash).toHaveBeenCalledTimes(4);
-      expect(bcrypt.hash).toHaveBeenCalledWith('admin123', 10);
-      expect(bcrypt.hash).toHaveBeenCalledWith('vendor123', 10);
+      // 1 admin + 1 vendedor = 2 bcrypt.hash calls
+      expect(bcrypt.hash).toHaveBeenCalledTimes(2);
+      expect(bcrypt.hash).toHaveBeenCalledWith('admin', 10);
+      expect(bcrypt.hash).toHaveBeenCalledWith('1234', 10);
     });
 
     it('debería guardar todos los usuarios en la base de datos', async () => {
@@ -160,7 +168,7 @@ describe('SeedService', () => {
 
       await service.seed();
 
-      expect(mockUsuariosRepository.save).toHaveBeenCalledTimes(4);
+      expect(mockUsuariosRepository.save).toHaveBeenCalledTimes(2);
     });
 
     it('debería crear usuarios con campos requeridos', async () => {

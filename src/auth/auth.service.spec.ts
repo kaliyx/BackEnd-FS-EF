@@ -89,8 +89,11 @@ describe('AuthService', () => {
       expect(resultado.mensaje).toBe('Usuario registrado exitosamente');
       expect(resultado.token).toBe('token123');
       expect(resultado.usuario.email).toBe(usuarioRegistro.email);
-      expect(mockUsuariosRepository.findOne).toHaveBeenCalledWith({
+      expect(mockUsuariosRepository.findOne).toHaveBeenNthCalledWith(1, {
         where: { email: usuarioRegistro.email },
+      });
+      expect(mockUsuariosRepository.findOne).toHaveBeenNthCalledWith(2, {
+        where: { nombre: usuarioRegistro.nombre },
       });
       expect(bcrypt.hash).toHaveBeenCalledWith(usuarioRegistro.password, 10);
       expect(mockUsuariosRepository.save).toHaveBeenCalled();
@@ -139,20 +142,20 @@ describe('AuthService', () => {
   describe('login', () => {
     it('debería iniciar sesión correctamente', async () => {
       const loginData = {
-        email: 'juan@example.com',
+        username: 'Juan Pérez',
         password: 'password123',
       };
 
       mockUsuariosRepository.findOne.mockResolvedValue(mockUsuario);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-      const resultado = await service.login(loginData.email, loginData.password);
+      const resultado = await service.login(loginData.username, loginData.password);
 
       expect(resultado.mensaje).toBe('Sesión iniciada exitosamente');
       expect(resultado.token).toBe('token123');
-      expect(resultado.usuario.email).toBe(loginData.email);
+      expect(resultado.usuario.nombre).toBe(loginData.username);
       expect(mockUsuariosRepository.findOne).toHaveBeenCalledWith({
-        where: { email: loginData.email },
+        where: { nombre: loginData.username },
       });
       expect(bcrypt.compare).toHaveBeenCalledWith(
         loginData.password,
@@ -164,8 +167,8 @@ describe('AuthService', () => {
       mockUsuariosRepository.findOne.mockResolvedValue(null);
 
       await expect(
-        service.login('noexiste@example.com', 'password123'),
-      ).rejects.toThrow('Email o contraseña incorrectos');
+        service.login('noexiste', 'password123'),
+      ).rejects.toThrow('Usuario o contraseña incorrectos');
     });
 
     it('debería lanzar error si la contraseña es incorrecta', async () => {
@@ -173,8 +176,8 @@ describe('AuthService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(
-        service.login('juan@example.com', 'passwordIncorrecto'),
-      ).rejects.toThrow('Email o contraseña incorrectos');
+        service.login('Juan Pérez', 'passwordIncorrecto'),
+      ).rejects.toThrow('Usuario o contraseña incorrectos');
     });
 
     it('debería lanzar error si el usuario está inactivo', async () => {
@@ -185,7 +188,7 @@ describe('AuthService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
       await expect(
-        service.login('juan@example.com', 'password123'),
+        service.login('Juan Pérez', 'password123'),
       ).rejects.toThrow('Tu cuenta ha sido desactivada');
     });
 
@@ -193,11 +196,11 @@ describe('AuthService', () => {
       mockUsuariosRepository.findOne.mockResolvedValue(mockUsuario);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-      await service.login('juan@example.com', 'password123');
+      await service.login('Juan Pérez', 'password123');
 
       expect(jwtService.sign).toHaveBeenCalledWith({
         id: mockUsuario.id,
-        email: mockUsuario.email,
+        username: mockUsuario.nombre,
         rol: mockUsuario.rol,
       });
     });
@@ -220,7 +223,7 @@ describe('AuthService', () => {
       );
 
       await expect(
-        service.login('juan@example.com', 'password123'),
+        service.login('Juan Pérez', 'password123'),
       ).rejects.toThrow('Database error');
     });
 

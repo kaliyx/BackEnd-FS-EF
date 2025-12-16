@@ -22,10 +22,10 @@ export class SeedService {
 
     console.log('Iniciando seed de datos...');
 
-    // Crear usuarios admin
-    const adminPassword = await bcrypt.hash('admin123', 10);
+    // Crear usuario admin con username 'admin' y password 'admin'
+    const adminPassword = await bcrypt.hash('admin', 10);
     const admin = this.usuariosRepository.create({
-      nombre: 'Administrador',
+      nombre: 'admin',
       email: 'admin@tienda.com',
       password: adminPassword,
       rol: 'admin',
@@ -35,42 +35,22 @@ export class SeedService {
     });
 
     await this.usuariosRepository.save(admin);
-    console.log('✓ Admin creado: admin@tienda.com / admin123');
+    console.log('✓ Admin creado: admin / admin');
 
-    // Crear vendedores de ejemplo
-    const vendedores = [
-      {
-        nombre: 'Juan Pérez',
-        email: 'juan@tienda.com',
-        password: 'vendor123',
-      },
-      {
-        nombre: 'María García',
-        email: 'maria@tienda.com',
-        password: 'vendor123',
-      },
-      {
-        nombre: 'Carlos López',
-        email: 'carlos@tienda.com',
-        password: 'vendor123',
-      },
-    ];
+    // Crear vendedor con username 'vendedor' y password '1234'
+    const vendedorPassword = await bcrypt.hash('1234', 10);
+    const vendedor = this.usuariosRepository.create({
+      nombre: 'vendedor',
+      email: 'vendedor@tienda.com',
+      password: vendedorPassword,
+      rol: 'vendedor',
+      activo: true,
+      telefono: '1234567890',
+      direccion: 'Tienda - vendedor',
+    });
 
-    for (const vendedorData of vendedores) {
-      const hashedPassword = await bcrypt.hash(vendedorData.password, 10);
-      const vendedor = this.usuariosRepository.create({
-        nombre: vendedorData.nombre,
-        email: vendedorData.email,
-        password: hashedPassword,
-        rol: 'vendedor',
-        activo: true,
-        telefono: '1234567890',
-        direccion: 'Tienda - ' + vendedorData.nombre,
-      });
-
-      await this.usuariosRepository.save(vendedor);
-      console.log(`✓ Vendedor creado: ${vendedorData.email} / ${vendedorData.password}`);
-    }
+    await this.usuariosRepository.save(vendedor);
+    console.log('✓ Vendedor creado: vendedor / 1234');
 
     console.log('Seed completado exitosamente.');
   }

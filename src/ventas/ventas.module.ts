@@ -10,5 +10,6 @@ import { Producto } from '../productos/producto.entity';
   imports: [TypeOrmModule.forFeature([Venta, DetalleVenta, Producto])],
   providers: [VentasService],
   controllers: [VentasController],
+  exports: [TypeOrmModule],
 })
 export class VentasModule {}

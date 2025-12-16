@@ -6,9 +6,8 @@ export class Usuario {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 255, nullable: false })
+  @Column({ length: 255, unique: true, nullable: false })
   nombre: string;
-
   @Column({ length: 255, unique: true, nullable: false })
   email: string;
 

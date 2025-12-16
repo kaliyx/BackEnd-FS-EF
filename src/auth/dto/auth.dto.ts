@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MinLength, IsOptional } from 'class-validator';
+import { IsString, MinLength, IsOptional, IsEmail } from 'class-validator';
 
 export class RegistroDto {
   @IsString({ message: 'El nombre debe ser un texto' })
@@ -22,8 +22,9 @@ export class RegistroDto {
 }
 
 export class LoginDto {
-  @IsEmail({}, { message: 'El email no es válido' })
-  email: string;
+  @IsString({ message: 'El nombre de usuario debe ser un texto' })
+  @MinLength(3, { message: 'El nombre de usuario debe tener al menos 3 caracteres' })
+  username: string;
 
   @IsString()
   @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres' })
