@@ -25,7 +25,7 @@ export class Venta {
   @Column('decimal', { precision: 5, scale: 2, default: 0 })
   impuesto: number;
 
-  @Column({ type: 'enum', enum: ['completada', 'pendiente', 'cancelada'], default: 'pendiente' })
+  @Column({ length: 20, default: 'pendiente' })
   estado: string;
 
   @CreateDateColumn()

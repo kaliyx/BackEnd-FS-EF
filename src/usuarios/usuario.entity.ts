@@ -14,11 +14,7 @@ export class Usuario {
   @Column({ length: 255, nullable: false })
   password: string;
 
-  @Column({
-    type: 'enum',
-    enum: ['admin', 'vendedor'],
-    default: 'vendedor',
-  })
+  @Column({ length: 20, default: 'vendedor' })
   rol: string;
 
   @Column({ default: true })

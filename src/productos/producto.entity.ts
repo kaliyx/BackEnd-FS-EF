@@ -18,21 +18,13 @@ export class Producto {
   @Column({ default: 0 })
   stock: number;
 
-  @Column({
-    type: 'enum',
-    enum: ['hombres', 'mujeres', 'niños', 'accesorios'],
-    nullable: false,
-  })
+  @Column({ length: 50, nullable: false })
   categoria: string;
 
   @Column({ length: 500, nullable: true })
   imagen: string;
 
-  @Column({
-    type: 'enum',
-    enum: ['activo', 'inactivo'],
-    default: 'activo',
-  })
+  @Column({ length: 20, default: 'activo' })
   estado: string;
 
   @CreateDateColumn()
