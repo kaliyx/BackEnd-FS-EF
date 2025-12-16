@@ -22,9 +22,8 @@ export class RegistroDto {
 }
 
 export class LoginDto {
-  @IsString({ message: 'El nombre de usuario debe ser un texto' })
-  @MinLength(3, { message: 'El nombre de usuario debe tener al menos 3 caracteres' })
-  username: string;
+  @IsEmail({}, { message: 'El email no es válido' })
+  email: string;
 
   @IsString()
   @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres' })

@@ -7,6 +7,11 @@ yarn.lock
 dist/
 build/
 
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
 # NestJS
 .env
 .env.local
@@ -15,6 +20,8 @@ build/
 # Testing
 coverage/
 .nyc_output/
+*.spec.ts
+*.test.ts
 
 # IDE
 .vscode/
@@ -37,3 +44,12 @@ yarn-error.log*
 # Cache
 .cache/
 .eslintcache
+
+# Documentation (keep only main README)
+INTEGRATION_GUIDE.md
+BACKEND_INTEGRATION.md
+ARCHITECTURE.md
+DATABASE_SCHEMA.sql
+
+# Collections
+*.postman_collection.json

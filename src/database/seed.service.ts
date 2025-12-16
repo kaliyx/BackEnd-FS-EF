@@ -22,35 +22,19 @@ export class SeedService {
 
     console.log('Iniciando seed de datos...');
 
-    // Crear usuario admin con username 'admin' y password 'admin'
-    const adminPassword = await bcrypt.hash('admin', 10);
-    const admin = this.usuariosRepository.create({
-      nombre: 'admin',
-      email: 'admin@tienda.com',
-      password: adminPassword,
-      rol: 'admin',
+    // Crear usuario de ejemplo con email 'usuario@tienda.com' y password 'usuario123'
+    const usuarioPassword = await bcrypt.hash('usuario123', 10);
+    const usuario = this.usuariosRepository.create({
+      nombre: 'Usuario Ejemplo',
+      email: 'usuario@tienda.com',
+      password: usuarioPassword,
       activo: true,
       telefono: '1234567890',
       direccion: 'Calle Principal 123',
     });
 
-    await this.usuariosRepository.save(admin);
-    console.log('✓ Admin creado: admin / admin');
-
-    // Crear vendedor con username 'vendedor' y password '1234'
-    const vendedorPassword = await bcrypt.hash('1234', 10);
-    const vendedor = this.usuariosRepository.create({
-      nombre: 'vendedor',
-      email: 'vendedor@tienda.com',
-      password: vendedorPassword,
-      rol: 'vendedor',
-      activo: true,
-      telefono: '1234567890',
-      direccion: 'Tienda - vendedor',
-    });
-
-    await this.usuariosRepository.save(vendedor);
-    console.log('✓ Vendedor creado: vendedor / 1234');
+    await this.usuariosRepository.save(usuario);
+    console.log('✓ Usuario creado: usuario@tienda.com / usuario123');
 
     console.log('Seed completado exitosamente.');
   }

@@ -38,7 +38,6 @@ export class AuthService {
       password: hashedPassword,
       telefono,
       direccion,
-      rol: 'vendedor',
     });
 
     await this.usuariosRepository.save(usuario);
@@ -46,7 +45,6 @@ export class AuthService {
     const token = this.jwtService.sign({
       id: usuario.id,
       email: usuario.email,
-      rol: usuario.rol,
     });
 
     return {
@@ -56,18 +54,17 @@ export class AuthService {
         id: usuario.id,
         nombre: usuario.nombre,
         email: usuario.email,
-        rol: usuario.rol,
       },
     };
   }
 
-  async login(username: string, password: string) {
+  async login(email: string, password: string) {
     const usuario = await this.usuariosRepository.findOne({
-      where: { nombre: username },
+      where: { email },
     });
 
     if (!usuario) {
-      throw new Error('Usuario o contraseña incorrectos');
+      throw new Error('Email o contraseña incorrectos');
     }
 
     const esValido = await bcrypt.compare(password, usuario.password);
@@ -82,8 +79,7 @@ export class AuthService {
 
     const token = this.jwtService.sign({
       id: usuario.id,
-      username: usuario.nombre,
-      rol: usuario.rol,
+      email: usuario.email,
     });
 
     return {
@@ -93,7 +89,6 @@ export class AuthService {
         id: usuario.id,
         nombre: usuario.nombre,
         email: usuario.email,
-        rol: usuario.rol,
       },
     };
   }
